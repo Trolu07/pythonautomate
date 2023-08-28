@@ -1,0 +1,15 @@
+from selenium import webdriver
+
+# Utwórz obiekt przeglądarki Edge
+driver = webdriver.Edge(executable_path='ścieżka_do_swojego_microsoft_edge_webdriver')
+
+# Otwórz link
+driver.get('twój_link_do_pobrania')
+
+# Pobierz plik
+# tutaj kod do pobierania pliku
+
+# Zamknij przeglądarkę
+driver.quit()
+
+print("Pobieranie z przeglądarki Microsoft Edge zakończone.")
