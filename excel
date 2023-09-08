@@ -1,0 +1,10 @@
+Private Sub Worksheet_Change(ByVal Target As Range)
+    Dim Zaznaczenie As Range
+    Set Zaznaczenie = Range("A1") ' Zmień na odpowiednią komórkę z listą rozwijaną
+
+    If Not Intersect(Target, Zaznaczenie) Is Nothing Then
+        Application.EnableEvents = False ' Wyłącz obsługę zdarzeń, aby uniknąć błędów rekurencyjnych
+        Rows("2:4").EntireRow.Hidden = (Zaznaczenie.Value = "Nie") ' Ukryj wiersze, jeśli wybór to "Nie"
+        Application.EnableEvents = True ' Włącz obsługę zdarzeń z powrotem
+    End If
+End Sub
