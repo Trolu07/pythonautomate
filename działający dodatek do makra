@@ -1,0 +1,7 @@
+Private Sub Worksheet_Change(ByVal Target As Range)
+    If Not Intersect(Target, Me.Range("A9, A16")) Is Nothing Then
+        Application.EnableEvents = False ' Wyłącz ponowne wywoływanie zdarzeń, aby uniknąć pętli
+        Hide_Rows_Based_On_Cell_Value ' Wywołaj Twoje makro
+        Application.EnableEvents = True ' Włącz ponowne wywoływanie zdarzeń
+    End If
+End Sub
