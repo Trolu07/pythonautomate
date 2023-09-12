@@ -1,0 +1,27 @@
+Sub Hide_Rows_Based_On_Cell_Value()
+    Dim ws As Worksheet
+    Dim CellA9 As Range
+    Dim CellA16 As Range
+    
+    ' Wskaźnik na arkusz, na którym chcesz działać
+    Set ws = ThisWorkbook.Sheets("Arkusz1") ' Zmień "NazwaArkusza" na nazwę właściwego arkusza
+    
+    ' Wskaźnik na komórki A9 i A16
+    Set CellA9 = ws.Range("A9")
+    Set CellA16 = ws.Range("A16")
+    
+    ' Ukrywanie wierszy na podstawie zawartości komórki A9
+    If CellA9.Value = "Tak" Then
+        ws.Rows("11:13").Hidden = True
+    Else
+        ws.Rows("11:13").Hidden = False
+    End If
+    
+    ' Ukrywanie wierszy na podstawie zawartości komórki A16
+    If CellA16.Value = "Tak" Then
+        ws.Rows("19:21").Hidden = True
+    Else
+        ws.Rows("19:21").Hidden = False
+    End If
+End Sub
+
