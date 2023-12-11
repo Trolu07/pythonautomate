@@ -1,0 +1,31 @@
+import os
+import pandas as pd
+
+def utworz_zbiorcze_zestawienie(folder_wejsciowy, folder_wyjsciowy):
+    # Inicjalizuj pusty DataFrame
+    df_zbiorcze = pd.DataFrame(columns=['Nazwa Pliku', 'Komórka A2', 'Komórka B5'])
+
+    # Pobierz listę plików w folderze wejściowym
+    pliki = os.listdir(folder_wejsciowy)
+
+    # Iteruj przez pliki
+    for plik in pliki:
+        if plik.endswith('.xlsx'):
+            sciezka_wejsciowa = os.path.join(folder_wejsciowy, plik)
+
+            # Otwórz plik Excela za pomocą Pandas
+            df = pd.read_excel(sciezka_wejsciowa)
+
+            # Pobierz odpowiednie komórki
+            komorka_A2 = df.at[1, 'A']
+            komorka_B5 = df.at[4, 'B']
+
+            # Dodaj dane do DataFrame
+            df_zbiorcze = df_zbiorcze.append({'Nazwa Pliku': plik, 'Komórka A2': komorka_A2, 'Komórka B5': komorka_B5}, ignore_index=True)
+
+    # Zapisz DataFrame do pliku wyjściowego
+    sciezka_wyjsciowa = os.path.join(folder_wyjsciowy, 'zbiorcze zestawienie.xlsx')
+    df_zbiorcze.to_excel(sciezka_wyjsciowa, index=False)
+
+# Użycie funkcji
+utworz_zbiorcze_zestawienie('C:\\Users\\sebas\\OneDrive\\Dokumenty\\trening SON\\wejście', 'C:\\Users\\sebas\\OneDrive\\Dokumenty\\trening SON\\wyjście')
