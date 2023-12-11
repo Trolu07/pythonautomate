@@ -1,31 +1,35 @@
 import os
 import pandas as pd
 
-def utworz_zbiorcze_zestawienie(folder_wejsciowy, folder_wyjsciowy):
-    # Inicjalizuj pusty DataFrame
-    df_zbiorcze = pd.DataFrame(columns=['Nazwa Pliku', 'Komórka A2', 'Komórka B5'])
+def utworz_zbiorcze_zestawienie(folder_wejscie, folder_wyjscie):
+    # Sprawdź czy folder_wyjscie istnieje, jeśli nie to go utwórz
+    if not os.path.exists(folder_wyjscie):
+        os.makedirs(folder_wyjscie)
 
-    # Pobierz listę plików w folderze wejściowym
-    pliki = os.listdir(folder_wejsciowy)
+    # Zainicjuj DataFrame, który będzie przechowywał dane
+    df_zestawienie = pd.DataFrame()
 
-    # Iteruj przez pliki
-    for plik in pliki:
-        if plik.endswith('.xlsx'):
-            sciezka_wejsciowa = os.path.join(folder_wejsciowy, plik)
+    # Przeszukaj pliki .xlsx w folderze wejście
+    for filename in os.listdir(folder_wejscie):
+        if filename.endswith(".xlsx"):
+            filepath = os.path.join(folder_wejscie, filename)
 
-            # Otwórz plik Excela za pomocą Pandas
-            df = pd.read_excel(sciezka_wejsciowa)
+            # Wczytaj plik .xlsx do DataFrame
+            df = pd.read_excel(filepath)
 
-            # Pobierz odpowiednie komórki
-            komorka_A2 = df.at[1, 'A']
-            komorka_B5 = df.at[4, 'B']
+            # Dodaj kolumny A2 i B5 do df_zestawienie
+            df_zestawienie[filename + '_A2'] = df['A2']
+            df_zestawienie[filename + '_B5'] = df['B5']
 
-            # Dodaj dane do DataFrame
-            df_zbiorcze = df_zbiorcze.append({'Nazwa Pliku': plik, 'Komórka A2': komorka_A2, 'Komórka B5': komorka_B5}, ignore_index=True)
+    # Utwórz plik "zbiorcze zestawienie"
+    numer = 1
+    nazwa_pliku = f"zbiorcze zestawienie{numer}.xlsx"
 
-    # Zapisz DataFrame do pliku wyjściowego
-    sciezka_wyjsciowa = os.path.join(folder_wyjsciowy, 'zbiorcze zestawienie.xlsx')
-    df_zbiorcze.to_excel(sciezka_wyjsciowa, index=False)
+    while os.path.exists(os.path.join(folder_wyjscie, nazwa_pliku)):
+        numer += 1
+        nazwa_pliku = f"zbiorcze zestawienie{numer}.xlsx"
 
-# Użycie funkcji
-utworz_zbiorcze_zestawienie('C:\\Users\\sebas\\OneDrive\\Dokumenty\\trening SON\\wejście', 'C:\\Users\\sebas\\OneDrive\\Dokumenty\\trening SON\\wyjście')
+    df_zestawienie.to_excel(os.path.join(folder_wyjscie, nazwa_pliku), index=False)
+
+# Przykładowe użycie
+utworz_zbiorcze_zestawienie(r'C:\Users\sebas\OneDrive\Dokumenty\trening SON\wejście',r'C:\Users\sebas\OneDrive\Dokumenty\trening SON\wyjście')
