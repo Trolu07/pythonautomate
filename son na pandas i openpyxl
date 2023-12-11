@@ -1,0 +1,38 @@
+import os
+import pandas as pd
+from openpyxl import load_workbook
+
+def utworz_zbiorcze_zestawienie(folder_wejsciowy, folder_wyjsciowy):
+    # Utwórz listy do przechowywania danych
+    nazwa_pliku = []
+    komorka_A2 = []
+    komorka_B5 = []
+
+    # Przeszukaj pliki w folderze wejściowym
+    for filename in os.listdir(folder_wejsciowy):
+        if filename.endswith(".xlsx"):
+            filepath = os.path.join(folder_wejsciowy, filename)
+
+            # Załaduj arkusz
+            wb = load_workbook(filepath)
+            sheet = wb.active
+
+            # Dodaj dane do list
+            nazwa_pliku.append(filename)
+            komorka_A2.append(sheet['A2'].value if sheet['A2'].value else None)
+            komorka_B5.append(sheet['B5'].value if sheet['B5'].value else None)
+
+    # Utwórz DataFrame Pandas
+    df_zestawienie = pd.DataFrame({
+        'Nazwa Pliku': nazwa_pliku,
+        'A2': komorka_A2,
+        'B5': komorka_B5
+    })
+
+    # Zapisz DataFrame do pliku Excela
+    df_zestawienie.to_excel(os.path.join(folder_wyjsciowy, 'zbiorcze_zestawienie.xlsx'), index=False)
+
+# Przykładowe użycie
+utworz_zbiorcze_zestawienie(r'C:\Users\sebas\OneDrive\Dokumenty\trening SON\wejście',
+                            r'C:\Users\sebas\OneDrive\Dokumenty\trening SON\wyjście')
+
