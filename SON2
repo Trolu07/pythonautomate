@@ -1,0 +1,29 @@
+import os
+from openpyxl import Workbook, load_workbook
+
+def utworz_zbiorcze_zestawienie(sciezka_wejsciowa, sciezka_wyjsciowa):
+    numer = 1
+    nazwa_pliku_wyjsciowego = f"zbiorcze_zestawienie{numer}.xlsx"
+
+    while os.path.exists(os.path.join(sciezka_wyjsciowa, nazwa_pliku_wyjsciowego)):
+        numer += 1
+        nazwa_pliku_wyjsciowego = f"zbiorcze_zestawienie{numer}.xlsx"
+
+    wb_wyjsciowy = Workbook()
+    ws_wyjsciowy = wb_wyjsciowy.active
+
+    for nazwa_pliku in os.listdir(sciezka_wejsciowa):
+        if nazwa_pliku.endswith(".xlsx"):
+            sciezka_pliku = os.path.join(sciezka_wejsciowa, nazwa_pliku)
+            wb_wejsciowy = load_workbook(sciezka_pliku)
+            ws_wejsciowy = wb_wejsciowy.active
+
+            komorka_a2 = ws_wejsciowy['A2'].value
+            komorka_b5 = ws_wejsciowy['B5'].value
+
+            ws_wyjsciowy.append([nazwa_pliku, komorka_a2, komorka_b5])
+
+    wb_wyjsciowy.save(os.path.join(sciezka_wyjsciowa, nazwa_pliku_wyjsciowego))
+
+# Użycie funkcji
+utworz_zbiorcze_zestawienie("sciezka/do/folderu/wejsciowego", "sciezka/do/folderu/wyjsciowego")
