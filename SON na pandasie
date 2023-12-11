@@ -7,7 +7,7 @@ def utworz_zbiorcze_zestawienie(folder_wejscie, folder_wyjscie):
         os.makedirs(folder_wyjscie)
 
     # Zainicjuj DataFrame, który będzie przechowywał dane
-    df_zestawienie = pd.DataFrame()
+    df_zestawienie = pd.DataFrame(columns=['Nazwa pliku', 'A2', 'B5'])
 
     # Przeszukaj pliki .xlsx w folderze wejście
     for filename in os.listdir(folder_wejscie):
@@ -17,9 +17,12 @@ def utworz_zbiorcze_zestawienie(folder_wejscie, folder_wyjscie):
             # Wczytaj plik .xlsx do DataFrame
             df = pd.read_excel(filepath)
 
-            # Dodaj kolumny A2 i B5 do df_zestawienie
-            df_zestawienie[filename + '_A2'] = df['A2']
-            df_zestawienie[filename + '_B5'] = df['B5']
+            # Dodaj wiersz do df_zestawienie
+            df_zestawienie = df_zestawienie.append({
+                'Nazwa pliku': filename,
+                'A2': df.at[1, 'A'] if 'A' in df.columns else None,
+                'B5': df.at[4, 'B'] if 'B' in df.columns else None,
+            }, ignore_index=True)
 
     # Utwórz plik "zbiorcze zestawienie"
     numer = 1
