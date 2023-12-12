@@ -2,7 +2,7 @@ import os
 import pandas as pd
 
 def utworz_zbiorcze_zestawienie(folder_wejsciowy, folder_wyjsciowy):
-    df_zestawienie = pd.DataFrame(columns=['Nazwa Pliku', 'A2', 'B5'])
+    zestawienie_danych = {'Nazwa Pliku': [], 'A2': [], 'B5': []}
 
     for root, dirs, files in os.walk(folder_wejsciowy):
         for file in files:
@@ -16,20 +16,24 @@ def utworz_zbiorcze_zestawienie(folder_wejsciowy, folder_wyjsciowy):
 
                     komorka_A2 = df.at[1, 0]
                     komorka_B5 = df.at[4, 1]
-                    
-                    df_zestawienie = df_zestawienie.append({
-                        'Nazwa Pliku': nazwa_pliku,
-                        'A2': komorka_A2,
-                        'B5': komorka_B5
-                    }, ignore_index=True)
+
+                    zestawienie_danych['Nazwa Pliku'].append(nazwa_pliku)
+                    zestawienie_danych['A2'].append(komorka_A2)
+                    zestawienie_danych['B5'].append(komorka_B5)
                 except Exception as e:
                     print(f"Błąd przy odczycie pliku {nazwa_pliku}: {e}")
 
-    if not os.path.exists(folder_wyjsciowy):
-        os.makedirs(folder_wyjsciowy)
+    if zestawienie_danych['Nazwa Pliku']:
+        df_zestawienie = pd.DataFrame(zestawienie_danych)
+        
+        if not os.path.exists(folder_wyjsciowy):
+            os.makedirs(folder_wyjsciowy)
 
-    nazwa_pliku_wyjsciowego = 'zbiorcze_zestawienie.xlsx'
-    sciezka_pliku_wyjsciowego = os.path.join(folder_wyjsciowy, nazwa_pliku_wyjsciowego)
-    df_zestawienie.to_excel(sciezka_pliku_wyjsciowego, index=False)
+        nazwa_pliku_wyjsciowego = 'zbiorcze_zestawienie.xlsx'
+        sciezka_pliku_wyjsciowego = os.path.join(folder_wyjsciowy, nazwa_pliku_wyjsciowego)
+        df_zestawienie.to_excel(sciezka_pliku_wyjsciowego, index=False)
+    else:
+        print("Brak danych do utworzenia zbiorczego zestawienia.")
 
 utworz_zbiorcze_zestawienie(r'C:\Users\sebas\OneDrive\Dokumenty\trening SON\wejście', r'C:\Users\sebas\OneDrive\Dokumenty\trening SON\wyjście')
+
