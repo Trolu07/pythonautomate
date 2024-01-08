@@ -1,0 +1,41 @@
+import os
+import tkinter as tk
+import pandas as pd
+from tkinter import filedialog
+
+def pocietie_i_zapis_do_csv(sciezka_do_excela, kolumna_klucz, folder_docelowy):
+    df = pd.read_excel(sciezka_do_excela)
+
+    unikalne_klucze = df[kolumna_klucz].unique()
+
+    for klucz in unikalne_klucze:
+        df_klucz = df[df[kolumna_klucz] == klucz]
+        
+        df_klucz = df_klucz.iloc[:, 1:]
+
+        nazwa_pliku_csv = os.path.join(folder_docelowy, f"{klucz}.csv")
+        df_klucz.to_csv(nazwa_pliku_csv, index=False, header=False, encoding='utf-8')  # Dodane encoding='utf-8'
+        print(f"Utworzono plik CSV: {nazwa_pliku_csv}")
+
+def wykonaj_skrypt():
+    sciezka_do_excela = filedialog.askopenfilename(title="Wybierz plik z krokami testowymi do pociachania", filetypes=[("Excel files", "*.xlsx")])
+
+    # Pobierz nazwę kolumny klucza
+    kolumna_klucz = "NR przypadku testowego"
+
+    # Pobierz lokalizację folderu docelowego
+    folder_docelowy = filedialog.askdirectory(title="Wybierz folder do zapisania kroków testowych w csv")
+
+    # Wywołaj funkcję
+    pocietie_i_zapis_do_csv(sciezka_do_excela, kolumna_klucz, folder_docelowy)
+
+# Stwórz prosty interfejs użytkownika
+root = tk.Tk()
+root.title("Aplikacja do pocięcia kroków testowych na szablonie QAC")
+
+# Przycisk do uruchomienia skryptu
+button = tk.Button(root, text="Uruchom automat", command=wykonaj_skrypt)
+button.pack(pady=20)
+
+# Uruchom główną pętlę tkinter
+root.mainloop()
