@@ -1,0 +1,26 @@
+import os
+import pandas as pd
+
+def pocietie_i_zapis_do_csv(sciezka_do_excela, kolumna_klucz, folder_docelowy):
+    df = pd.read_excel(sciezka_do_excela)
+
+    # Uzyskaj unikalne wartości klucza
+    unikalne_klucze = df[kolumna_klucz].unique()
+
+    # Sprawdź, czy folder docelowy istnieje, jeśli nie, utwórz go
+    if not os.path.exists(folder_docelowy):
+        os.makedirs(folder_docelowy)
+
+    # Pocięcie i zapis do plików CSV
+    for klucz in unikalne_klucze:
+        df_klucz = df[df[kolumna_klucz] == klucz]
+        
+        # Usuń pierwszą kolumnę i pierwszy wiersz
+        df_klucz = df_klucz.iloc[:, 1:]
+
+        nazwa_pliku_csv = os.path.join(folder_docelowy, f"{klucz}.csv")
+        df_klucz.to_csv(nazwa_pliku_csv, index=False, header=False, encoding='utf-8')  # Dodane encoding='utf-8'
+        print(f"Utworzono plik CSV: {nazwa_pliku_csv}")
+
+# Przykładowe użycie
+pocietie_i_zapis_do_csv(wejscie", "NR przypadku testowego", wyjscie)
